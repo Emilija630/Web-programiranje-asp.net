@@ -4,9 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MVCAuth.Data;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication;
-
-
-
+using SignalRChat.Hubs;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +31,8 @@ builder.Services.AddAuthentication(options =>
         options.ClientId = "712549367470-og83dc67vdahi2e97cahhbis3fsfj87t.apps.googleusercontent.com";
         options.ClientSecret = "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";
     });
+
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -61,12 +61,13 @@ app.UseAuthorization();
 
 
     
-
-
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.MapRazorPages();
+
+app.MapHub<ChatHub>("/chatHub");
+
 
 app.Run();
